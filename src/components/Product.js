@@ -4,10 +4,7 @@ import { toast } from "bulma-toast"
 import { useParams } from "react-router"
 
 
-
-
 const Product = ({ addToCart }) => {
-
 
     const { category_slug, product_slug } = useParams()
 

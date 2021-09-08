@@ -28,9 +28,16 @@ const Category = ({ props, latestProducts }) => {
     if (!product) return (<div>Nada para mostrar</div>)
 
     return (
-        <div>
-            {product.products.map((product, index) => <ProductBox key={index} product={product} />)}
-        </div>
+        <section className='section'>
+            <div className="page-category">
+                <div className="columns is-multiline">
+                    <div className="column is-12">
+                        <h1 className="is-size has-text-centered">{ category_slug }</h1>
+                    </div>
+                    {product.products.map((product, index) => <ProductBox key={index} product={product} />)}
+                </div>
+            </div>
+            </section>
     )
 }
 

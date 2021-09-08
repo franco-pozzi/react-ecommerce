@@ -3,6 +3,9 @@ import Header from "./components/Header"
 import Product from "./components/Product"
 import CartPage from "./components/CartPage"
 import Category from "./components/Category"
+import Footer from "./components/Footer"
+import LogIn from "./components/LogIn"
+import Search from "./components/Search"
 
 import 'bulma/css/bulma.min.css'
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
@@ -38,9 +41,20 @@ const App = () => {
   const initializeAuthentication = () => (localStorage.getItem('token') ? true : false)
 
   const [token, setToken] = useState(initializeToken())
+
   const [isAuthenticated, setAuthentication] = useState(initializeAuthentication())
 
-  // const [isLoading, setIsLoading] = useState(false)
+
+
+
+  // console.log(token + ' token', isAuthenticated + ' autenticacion ' )
+
+
+
+
+
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const [cartTotalLength, setcartTotalLength] = useState()
 
@@ -97,17 +111,36 @@ const App = () => {
 
     setCart(cart)
   }
+  
+  const addToken = (token) => {
 
-
+    setToken(token)
+    setAuthentication(true)
+    localStorage.setItem("token", token)
+    console.log(token)
+  }
 
 
 
   return (
-    <Router>
-      <Header cartTotalLength={cartTotalLength} />
+    <Router>      
+      <Header cartTotalLength={cartTotalLength} isAuthenticated={isAuthenticated} />
+      
+      <div className={`is-loading-bar has-text-centered  ${isLoading ? 'is-loading' : ''}`}>
+        <div className="lds-dual-ring"></div>
+      </div>
+      
       <Switch>
         <Route exact path='/'>
           <Home latestProducts={latestProducts} />
+        </Route>
+
+        <Route exact path='/log-in' addToken={addToken}>
+          <LogIn />
+        </Route>
+
+        <Route exact path='/search'>
+          <Search setIsLoading={setIsLoading} />
         </Route>
 
         <Route exact path='/cart'>
@@ -117,12 +150,13 @@ const App = () => {
         <Route path='/:category_slug/:product_slug'>
           <Product addToCart={addToCart} />
         </Route>
-        
+
         <Route path='/:category_slug'>
           <Category latestProducts={latestProducts} />
         </Route>
 
       </Switch>
+      <Footer />
     </Router>
   )
 }
