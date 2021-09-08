@@ -44,16 +44,6 @@ const App = () => {
 
   const [isAuthenticated, setAuthentication] = useState(initializeAuthentication())
 
-
-
-
-  // console.log(token + ' token', isAuthenticated + ' autenticacion ' )
-
-
-
-
-
-
   const [isLoading, setIsLoading] = useState(false)
 
   const [cartTotalLength, setcartTotalLength] = useState()
@@ -112,15 +102,15 @@ const App = () => {
     setCart(cart)
   }
   
-  const addToken = (token) => {
-
+  const addToken =  (token) => {
+    
     setToken(token)
     setAuthentication(true)
     localStorage.setItem("token", token)
-    console.log(token)
+    
   }
 
-
+  
 
   return (
     <Router>      
@@ -135,8 +125,8 @@ const App = () => {
           <Home latestProducts={latestProducts} />
         </Route>
 
-        <Route exact path='/log-in' addToken={addToken}>
-          <LogIn />
+        <Route exact path='/log-in'>
+          <LogIn  addToken={addToken} />
         </Route>
 
         <Route exact path='/search'>

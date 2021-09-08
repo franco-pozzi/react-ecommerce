@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 
 
-const LogIn = ({ addToken }) => {
+const LogIn = ({addToken}) => {
 
     const [username, setUsername] = useState('')
 
@@ -11,9 +11,13 @@ const LogIn = ({ addToken }) => {
 
     const [errors, setErrors] = useState()
 
+    
+
 
     const onSubmit = (e) => {
-        // e.preventDefault()
+        e.preventDefault()
+
+        
 
         axios.defaults.headers.common["Authorization"] = ""
 
@@ -27,38 +31,24 @@ const LogIn = ({ addToken }) => {
         axios
             .post("/api/v1/token/login/", formData)
             .then(response => {
-
+                
                 const token = response.data.auth_token
 
                 axios.defaults.headers.common["Authorization"] = "Token " + token
 
-                // addToken(token)
-                console.log(token)
+                localStorage.setItem("token", token)
 
+                addToken(token)
 
-                // const toPath = this.$route.query.to || '/cart'
-
-                // this.$router.push(toPath)
             })
             .catch(error => {
-                // if (error.response) {
-                //     for (const property in error.response.data) {
-                //         errors.push(`${property}: ${error.response.data[property]}`)
-                //     }
-                // } else {
-                //     setErrors('Something went wrong. Plase try again')
 
-                //     console.log(JSON.stringify(error))
+                console.log(error)
 
-                console.log(error.response)
-                // }
-                // setErrors(error)
+                setErrors(error)
             })
 
-        setUsername('')
-        setPassword('')
     }
-
 
 
     useEffect(() => {
