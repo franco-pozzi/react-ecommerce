@@ -6,9 +6,10 @@ import Category from "./components/Category"
 import Footer from "./components/Footer"
 import LogIn from "./components/LogIn"
 import Search from "./components/Search"
+import MyAccount from "./components/MyAccount"
 
 import 'bulma/css/bulma.min.css'
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom"
 import { useState, useEffect } from "react"
 import axios from 'axios'
 
@@ -126,7 +127,11 @@ const App = () => {
         </Route>
 
         <Route exact path='/log-in'>
-          <LogIn  addToken={addToken} />
+          {!isAuthenticated ? <LogIn  addToken={addToken} /> : <Redirect to='/cart' />}
+        </Route>
+
+        <Route exact path='/my-account'>
+          {isAuthenticated ? <MyAccount  /> : <Redirect to='/log-in' />}
         </Route>
 
         <Route exact path='/search'>

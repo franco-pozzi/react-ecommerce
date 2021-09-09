@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 
 
-const LogIn = ({addToken}) => {
+const LogIn = ({ addToken }) => {
 
     const [username, setUsername] = useState('')
 
@@ -11,13 +11,9 @@ const LogIn = ({addToken}) => {
 
     const [errors, setErrors] = useState()
 
-    
-
 
     const onSubmit = (e) => {
         e.preventDefault()
-
-        
 
         axios.defaults.headers.common["Authorization"] = ""
 
@@ -31,7 +27,7 @@ const LogIn = ({addToken}) => {
         axios
             .post("/api/v1/token/login/", formData)
             .then(response => {
-                
+
                 const token = response.data.auth_token
 
                 axios.defaults.headers.common["Authorization"] = "Token " + token
@@ -39,17 +35,19 @@ const LogIn = ({addToken}) => {
                 localStorage.setItem("token", token)
 
                 addToken(token)
-
             })
             .catch(error => {
+                if (error.response) {
+                    for (const property in error.response.data) {
+                        setErrors(`${property}: ${error.response.data[property]}`)
+                    }
+                } else {
+                    setErrors('Something went wrong. Plase try again')
 
-                console.log(error)
-
-                setErrors(error)
+                    console.log(JSON.stringify(error))
+                }
             })
-
     }
-
 
     useEffect(() => {
         document.title = 'Log In | Djackets'
@@ -78,11 +76,11 @@ const LogIn = ({addToken}) => {
                                 </div>
                             </div>
 
-                            {/* {errors.length && 
+                            {errors && 
                                 <div className="notification is-danger">
-                                    <p>{ error }</p>
+                                    <p>{ errors }</p>
                                 </div>
-                            } */}
+                            }
 
                             <div className="field">
                                 <div className="control">

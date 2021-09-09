@@ -46,7 +46,8 @@ const Header = ({ cartTotalLength, isAuthenticated }) => {
                     <div className="navbar-item">
                         <div className="buttons">
 
-                            {!isAuthenticated && <Link to="/log-in" className="button is-ligth">Log in </Link>}
+                            {!isAuthenticated ? <Link to="/log-in" className="button is-ligth">Log in </Link> : <Link to="/my-account" className="button is-ligth"> My account </Link>}
+
 
                             <Link className="button is-success" to="/cart">
                                 <span className="icon"><MdShoppingCart /></span>
