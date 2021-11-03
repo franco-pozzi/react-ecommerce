@@ -1,9 +1,19 @@
-import { Link } from "react-router-dom"
-import { useEffect, useState } from "react"
-import axios from "axios"
+import { useState } from "react"
+import { Link, Redirect} from "react-router-dom"
+import { useContext } from "react"
 
 
-const LogIn = ({ addToken }) => {
+import AuthContext from "context/AuthContext"
+
+
+
+import { logInServices } from "services/logInServices"
+
+
+
+const LogIn = () => {
+
+    const { isAuthenticated, addToken } = useContext(AuthContext)
 
     const [username, setUsername] = useState('')
 
@@ -11,60 +21,27 @@ const LogIn = ({ addToken }) => {
 
     const [errors, setErrors] = useState()
 
+    
 
-    const formData = {
-        username: username,
-        password: password
-    }
 
-    console.log(formData)
-    
-    
-    
     const onSubmit = (e) => {
-        e.preventDefault()
-
-        axios.defaults.headers.common["Authorization"] = ""
-
-        localStorage.removeItem("token")
+        e.preventDefault()        
 
         const formData = {
             username: username,
             password: password
         }
 
-        axios
-            .post("/api/v1/token/login/", formData)
-            .then(response => {
-
-                const token = response.data.auth_token
-
-                axios.defaults.headers.common["Authorization"] = "Token " + token
-
-                localStorage.setItem("token", token)
-
-                addToken(token)
-            })
-            .catch(error => {
-                if (error.response) {
-                    for (const property in error.response.data) {
-                        setErrors(`${property}: ${error.response.data[property]}`)
-                    }
-                } else {
-                    setErrors('Something went wrong. Plase try again')
-
-                    console.log(JSON.stringify(error))
-                }
-            })
+        logInServices({formData, addToken, setErrors})
     }
 
-    useEffect(() => {
-        document.title = 'Log In | Djackets'
-    }, [])
+    const UserNameChange = evt => { setUsername(evt.target.value) }
+
+    const PasswordChange = evt => { setPassword(evt.target.value) }
 
 
-    const UserChange = evt => {}
-    
+    if (isAuthenticated) return <Redirect to='/cart' />
+
     return (
         <section className='section'>
             <div className="page-log-in">
@@ -76,14 +53,14 @@ const LogIn = ({ addToken }) => {
                             <div className="field">
                                 <label>Username</label>
                                 <div className="control">
-                                    <input type="text" placeholder='username' className="input" value={username} onChange={(e) => setUsername(e.target.value)} />
+                                    <input type="text" placeholder='username' className="input" value={username} onChange={UserNameChange} />
                                 </div>
                             </div>
 
                             <div className="field">
                                 <label>Password</label>
                                 <div className="control">
-                                    <input type="password" placeholder='password' className="input" value={password} onChange={(e) => setPassword(e.target.value)} />
+                                    <input type="password" placeholder='password' className="input" value={password} onChange={PasswordChange} />
                                 </div>
                             </div>
 

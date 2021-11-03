@@ -1,14 +1,18 @@
-import CartItem from "./CartItem"
+
+
 import { Link } from "react-router-dom"
+import CartItem from "components/CartItem"
+
+import { useContext } from "react"
+import CartContext from "context/CartContext"
+
+const CartPage = () => {
+
+    const { cart, cartTotalPrice, cartTotalLength } = useContext(CartContext)
+
+    const cartTableBody = cart.items.map((item) => (<CartItem key={item.product.id} item={item} />))
 
 
-const CartPage = ({ cart, removeFromCart, decrementQuantity, incrementQuantity, cartTotalLength }) => {
-
-    const cartTotalPrice = (cart.items.reduce ((acc, curVal) => {return acc += curVal.product.price * curVal.quantity}, 0))
-    
-    
-    
-    
     return (
         <div className="section page-cart">
             <div className="columns is-multiline">
@@ -17,7 +21,7 @@ const CartPage = ({ cart, removeFromCart, decrementQuantity, incrementQuantity, 
                 </div>
 
                 <div className="column is-12 box">
-                    <table className="table is-fullwidth" v-if="cartTotalLength">
+                    <table className="table is-fullwidth">
                         <thead>
                             <tr>
                                 <th>Product</th>
@@ -29,7 +33,7 @@ const CartPage = ({ cart, removeFromCart, decrementQuantity, incrementQuantity, 
                         </thead>
 
                         <tbody>
-                            {cart.items.map((item, index) => (<CartItem key={index} item={item} decrementQuantity={decrementQuantity} removeFromCart={removeFromCart} incrementQuantity={incrementQuantity}/>))}
+                            {cartTableBody}
                         </tbody>
 
                     </table>
@@ -37,18 +41,18 @@ const CartPage = ({ cart, removeFromCart, decrementQuantity, incrementQuantity, 
                     {cart.items.length === 0 && <p>You don't have any product in your cart...</p>}
                 </div>
 
-                <div className="column is-12 box">
-                    <h2 className="subtitle">Summary</h2>
+                {cart.items.length !== 0 &&
+                    <div className="column is-12 box">
+                        <h2 className="subtitle">Summary</h2>
 
-                    <strong>${cartTotalPrice}</strong>, {cartTotalLength} items
+                        <strong>${cartTotalPrice}</strong>, {cartTotalLength} items
 
-                    <hr />
+                        <hr />
 
-                    <Link className="button is-dark" to="/cart/checkout">Proceed to checkout</Link>
-                </div>
+                        <Link className="button is-dark" to="/cart/checkout">Proceed to checkout</Link>
+                    </div>
+                }
             </div>
-
-
         </div>
     )
 }

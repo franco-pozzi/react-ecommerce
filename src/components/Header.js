@@ -1,19 +1,35 @@
 import { Link } from 'react-router-dom'
 import { MdSearch, MdShoppingCart } from "react-icons/md";
 
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
-const Header = ({ cartTotalLength, isAuthenticated }) => {
+import AuthContext from 'context/AuthContext';
+import CartContext from "context/CartContext"
+
+
+
+const Header = () => {
 
     const [showMobileMenu, setShowMobileMenu] = useState(false)
 
+    const { isAuthenticated } = useContext(AuthContext)
+
+    const { cartTotalLength } = useContext( CartContext )
+    
+    
+    
+    
+    const handleMobileMenu = () => setShowMobileMenu(!showMobileMenu)
+
+    
+    const Button = !isAuthenticated ? <Link to="/log-in" className="button is-ligth">Log in </Link> : <Link to="/my-account" className="button is-ligth"> My account </Link>
 
     return (
         <nav className="navbar is-dark">
             <div className="navbar-brand">
                 <Link className="navbar-item" to="/"><strong>Djackets</strong></Link>
 
-                <button aria-label="menu" aria-expanded="false" data-target="navbar-menu" className="navbar-burger" onClick={() => setShowMobileMenu(!showMobileMenu)}>
+                <button aria-label="menu" aria-expanded="false" data-target="navbar-menu" className="navbar-burger" onClick={handleMobileMenu}>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
@@ -46,8 +62,7 @@ const Header = ({ cartTotalLength, isAuthenticated }) => {
                     <div className="navbar-item">
                         <div className="buttons">
 
-                            {!isAuthenticated ? <Link to="/log-in" className="button is-ligth">Log in </Link> : <Link to="/my-account" className="button is-ligth"> My account </Link>}
-
+                            { Button }
 
                             <Link className="button is-success" to="/cart">
                                 <span className="icon"><MdShoppingCart /></span>
